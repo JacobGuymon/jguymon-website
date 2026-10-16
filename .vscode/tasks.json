@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/server/personal-website-backing.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "waitForServer",
+      "command": "powershell",
+      "type": "shell",
+      "args": [
+        "-Command",
+        "Start-Sleep -Seconds 3"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "vite-dev",
+      "command": "npm",
+      "type": "shell",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Local:\\s+http://localhost:\\d+"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ]
+}

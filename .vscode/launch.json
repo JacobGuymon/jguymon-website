@@ -1,0 +1,55 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": ".NET Core Launch (Server)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/server/bin/Debug/net10.0/personal-website-backing.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/server",
+      "stopAtEntry": false,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    {
+      "name": "Chrome Launch",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5131/swagger",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "waitForServer",
+      "runtimeArgs": [
+        "--new-window"
+      ]
+    },
+    {
+      "name": "Chrome Launch (Client)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/client",
+      "sourceMaps": true,
+      "preLaunchTask": "vite-dev",
+      "runtimeArgs": [
+        "--new-window"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack Debug",
+      "configurations": [".NET Core Launch (Server)", "Chrome Launch"],
+      "stopAll": true
+    },
+    {
+      "name": "Full Stack Debug (Client + Server)",
+      "configurations": [".NET Core Launch (Server)", "Chrome Launch (Client)"],
+      "stopAll": true
+    }
+  ]
+}
