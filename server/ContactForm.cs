@@ -6,6 +6,8 @@ record ContactFormRequest(string? Name, string? Email, string? Message, string? 
 
 static class ContactFormEndpoint
 {
+    public const string RateLimitPolicy = "contact-form";
+
     public static void MapContactFormEndpoint(this WebApplication app)
     {
         app.MapPost("/api/contact", async (
@@ -37,7 +39,8 @@ static class ContactFormEndpoint
                 config["ContactForm:SenderEmail"]!,
                 logger);
         })
-        .WithName("PostContactForm");
+        .WithName("PostContactForm")
+        .RequireRateLimiting(RateLimitPolicy);
     }
 
     internal static SendEmailRequest BuildEmailRequest(ContactFormRequest request, string recipientEmail, string senderEmail)
@@ -94,7 +97,7 @@ static class ContactFormEndpoint
             errors.Add("Name is required and must be 200 characters or fewer.");
         }
 
-        if (string.IsNullOrWhiteSpace(request.Email) || request.Email.Length > 320 || !MailAddress.TryCreate(request.Email, out _))
+        if (string.IsNullOrWhiteSpace(request.Email) || request.Email.Length > 320 || request.Email.Any(c => c is '\r' or '\n') || !MailAddress.TryCreate(request.Email, out _))
         {
             errors.Add("A valid email address is required.");
         }

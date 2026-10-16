@@ -60,6 +60,19 @@ public class ContactFormValidationTests
         Assert.Contains(errors, e => e.Contains("email"));
     }
 
+    [Theory]
+    [InlineData("ada@example.com\r\nBcc: spam@evil.com")]
+    [InlineData("ada@example.com\n")]
+    [InlineData("ada@example.com\r")]
+    public void EmailContainingCarriageReturnOrNewline_ReturnsError(string email)
+    {
+        var request = ValidRequest() with { Email = email };
+
+        var errors = ContactFormEndpoint.ValidateRequest(request);
+
+        Assert.Contains(errors, e => e.Contains("email"));
+    }
+
     [Fact]
     public void EmailOver320Characters_ReturnsError()
     {

@@ -37,6 +37,12 @@ function ContactTab() {
         return
       }
 
+      if (res.status === 429) {
+        setErrors(['Too many messages sent. Please wait a few minutes and try again.'])
+        setStatus('error')
+        return
+      }
+
       setErrors(['Failed to send message. Please try again later.'])
       setStatus('error')
     } catch {

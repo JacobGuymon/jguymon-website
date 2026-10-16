@@ -86,6 +86,17 @@ describe('ContactTab', () => {
     expect(await screen.findByText('A valid email address is required.')).toBeInTheDocument()
   })
 
+  it('shows a rate-limit message on 429', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 429 }))
+    const user = userEvent.setup()
+    render(<ContactTab />)
+
+    await fillForm(user)
+    await user.click(screen.getByRole('button', { name: /send message/i }))
+
+    expect(await screen.findByText(/too many messages sent/i)).toBeInTheDocument()
+  })
+
   it('shows a generic error on a non-400 failure response', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 502 }))
     const user = userEvent.setup()
